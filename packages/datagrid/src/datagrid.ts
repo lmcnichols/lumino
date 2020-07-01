@@ -1949,7 +1949,7 @@ class DataGrid extends Widget {
   /**
    * Schedule a repaint of all of the grid content.
    */
-  private _repaintContent(): void {
+  protected _repaintContent(): void {
     let msg = new Private.PaintRequest('all', 0, 0, 0, 0);
     MessageLoop.postMessage(this._viewport, msg);
   }
@@ -1957,7 +1957,7 @@ class DataGrid extends Widget {
   /**
    * Schedule a repaint of specific grid content.
    */
-  private _repaintRegion(region: DataModel.CellRegion, r1: number, c1: number, r2: number, c2: number): void {
+  protected _repaintRegion(region: DataModel.CellRegion, r1: number, c1: number, r2: number, c2: number): void {
     let msg = new Private.PaintRequest(region, r1, c1, r2, c2);
     MessageLoop.postMessage(this._viewport, msg);
   }
@@ -1965,7 +1965,7 @@ class DataGrid extends Widget {
   /**
    * Schedule a repaint of the overlay.
    */
-  private _repaintOverlay(): void {
+  protected _repaintOverlay(): void {
     MessageLoop.postMessage(this._viewport, Private.OverlayPaintRequest);
   }
 
@@ -1974,7 +1974,7 @@ class DataGrid extends Widget {
    *
    * This method will retain the valid canvas content.
    */
-  private _resizeCanvasIfNeeded(width: number, height: number): void {
+  protected _resizeCanvasIfNeeded(width: number, height: number): void {
     // Scale the size by the dpi ratio.
     width = width * this._dpiRatio;
     height = height * this._dpiRatio;
@@ -2083,7 +2083,7 @@ class DataGrid extends Widget {
    * fit-request will be dispatched to the data grid to immediately
    * resize the viewport.
    */
-  private _syncScrollState(): void {
+  protected _syncScrollState(): void {
     // Fetch the viewport dimensions.
     let bw = this.bodyWidth;
     let bh = this.bodyHeight;
@@ -2140,7 +2140,7 @@ class DataGrid extends Widget {
    * #### Notes
    * This schedules a full repaint and syncs the scroll state.
    */
-  private _syncViewport(): void {
+  protected _syncViewport(): void {
     this._repaintContent();
     this._repaintOverlay();
     this._syncScrollState();
@@ -2149,7 +2149,7 @@ class DataGrid extends Widget {
   /**
    * Process a message sent to the viewport
    */
-  private _processViewportMessage(msg: Message): void {
+  protected _processViewportMessage(msg: Message): void {
     switch (msg.type) {
     case 'resize':
       this._onViewportResize(msg as Widget.ResizeMessage);
@@ -2177,7 +2177,7 @@ class DataGrid extends Widget {
   /**
    * A message hook invoked on a viewport `'resize'` message.
    */
-  private _onViewportResize(msg: Widget.ResizeMessage): void {
+  protected _onViewportResize(msg: Widget.ResizeMessage): void {
     // Bail early if the viewport is not visible.
     if (!this._viewport.isVisible) {
       return;
@@ -2246,14 +2246,14 @@ class DataGrid extends Widget {
   /**
    * A message hook invoked on a viewport `'scroll-request'` message.
    */
-  private _onViewportScrollRequest(msg: Message): void {
+  protected _onViewportScrollRequest(msg: Message): void {
     this._scrollTo(this._hScrollBar.value, this._vScrollBar.value);
   }
 
   /**
    * A message hook invoked on a viewport `'paint-request'` message.
    */
-  private _onViewportPaintRequest(msg: Private.PaintRequest): void {
+  protected _onViewportPaintRequest(msg: Private.PaintRequest): void {
     // Bail early if the viewport is not visible.
     if (!this._viewport.isVisible) {
       return;
@@ -2363,7 +2363,7 @@ class DataGrid extends Widget {
   /**
    * A message hook invoked on a viewport `'overlay-paint-request'` message.
    */
-  private _onViewportOverlayPaintRequest(msg: Message): void {
+  protected _onViewportOverlayPaintRequest(msg: Message): void {
     // Bail early if the viewport is not visible.
     if (!this._viewport.isVisible) {
       return;
@@ -2381,7 +2381,7 @@ class DataGrid extends Widget {
   /**
    * A message hook invoked on a viewport `'row-resize-request'` message.
    */
-  private _onViewportRowResizeRequest(msg: Private.RowResizeRequest): void {
+  protected _onViewportRowResizeRequest(msg: Private.RowResizeRequest): void {
     if (msg.region === 'body') {
       this._resizeRow(msg.index, msg.size);
     } else {
@@ -2392,7 +2392,7 @@ class DataGrid extends Widget {
   /**
    * A message hook invoked on a viewport `'column-resize-request'` message.
    */
-  private _onViewportColumnResizeRequest(msg: Private.ColumnResizeRequest): void {
+  protected _onViewportColumnResizeRequest(msg: Private.ColumnResizeRequest): void {
     if (msg.region === 'body') {
       this._resizeColumn(msg.index, msg.size);
     } else {
@@ -2403,14 +2403,14 @@ class DataGrid extends Widget {
   /**
    * Handle the `thumbMoved` signal from a scroll bar.
    */
-  private _onThumbMoved(sender: ScrollBar): void {
+  protected _onThumbMoved(sender: ScrollBar): void {
     MessageLoop.postMessage(this._viewport, Private.ScrollRequest);
   }
 
   /**
    * Handle the `pageRequested` signal from a scroll bar.
    */
-  private _onPageRequested(sender: ScrollBar, dir: 'decrement' | 'increment'): void {
+  protected _onPageRequested(sender: ScrollBar, dir: 'decrement' | 'increment'): void {
     if (sender === this._vScrollBar) {
       this.scrollByPage(dir === 'decrement' ? 'up' : 'down');
     } else {
@@ -2421,7 +2421,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `stepRequested` signal from a scroll bar.
    */
-  private _onStepRequested(sender: ScrollBar, dir: 'decrement' | 'increment'): void {
+  protected _onStepRequested(sender: ScrollBar, dir: 'decrement' | 'increment'): void {
     if (sender === this._vScrollBar) {
       this.scrollByStep(dir === 'decrement' ? 'up' : 'down');
     } else {
@@ -2432,7 +2432,7 @@ class DataGrid extends Widget {
   /**
    * A signal handler for the data model `changed` signal.
    */
-  private _onDataModelChanged(sender: DataModel, args: DataModel.ChangedArgs): void {
+  protected _onDataModelChanged(sender: DataModel, args: DataModel.ChangedArgs): void {
     switch (args.type) {
     case 'rows-inserted':
       this._onRowsInserted(args);
@@ -2466,14 +2466,14 @@ class DataGrid extends Widget {
   /**
    * A signal handler for the selection model `changed` signal.
    */
-  private _onSelectionsChanged(sender: SelectionModel): void {
+  protected _onSelectionsChanged(sender: SelectionModel): void {
     this._repaintOverlay();
   }
 
   /**
    * Handle rows being inserted in the data model.
    */
-  private _onRowsInserted(args: DataModel.RowsChangedArgs): void {
+  protected _onRowsInserted(args: DataModel.RowsChangedArgs): void {
     // Unpack the arg data.
     let { region, index, span } = args;
 
@@ -2505,7 +2505,7 @@ class DataGrid extends Widget {
   /**
    * Handle columns being inserted into the data model.
    */
-  private _onColumnsInserted(args: DataModel.ColumnsChangedArgs): void {
+  protected _onColumnsInserted(args: DataModel.ColumnsChangedArgs): void {
     // Unpack the arg data.
     let { region, index, span } = args;
 
@@ -2537,7 +2537,7 @@ class DataGrid extends Widget {
   /**
    * Handle rows being removed from the data model.
    */
-  private _onRowsRemoved(args: DataModel.RowsChangedArgs): void {
+  protected _onRowsRemoved(args: DataModel.RowsChangedArgs): void {
     // Unpack the arg data.
     let { region, index, span } = args;
 
@@ -2574,7 +2574,7 @@ class DataGrid extends Widget {
   /**
    * Handle columns being removed from the data model.
    */
-  private _onColumnsRemoved(args: DataModel.ColumnsChangedArgs): void {
+  protected _onColumnsRemoved(args: DataModel.ColumnsChangedArgs): void {
     // Unpack the arg data.
     let { region, index, span } = args;
 
@@ -2611,7 +2611,7 @@ class DataGrid extends Widget {
   /**
    * Handle rows moving in the data model.
    */
-  private _onRowsMoved(args: DataModel.RowsMovedArgs): void {
+  protected _onRowsMoved(args: DataModel.RowsMovedArgs): void {
     // Unpack the arg data.
     let { region, index, span, destination } = args;
 
@@ -2669,7 +2669,7 @@ class DataGrid extends Widget {
   /**
    * Handle columns moving in the data model.
    */
-  private _onColumnsMoved(args: DataModel.ColumnsMovedArgs): void {
+  protected _onColumnsMoved(args: DataModel.ColumnsMovedArgs): void {
     // Unpack the arg data.
     let { region, index, span, destination } = args;
 
@@ -2727,7 +2727,7 @@ class DataGrid extends Widget {
   /**
    * Handle cells changing in the data model.
    */
-  private _onCellsChanged(args: DataModel.CellsChangedArgs): void {
+  protected _onCellsChanged(args: DataModel.CellsChangedArgs): void {
     // Unpack the arg data.
     let { region, row, column, rowSpan, columnSpan } = args;
 
@@ -2749,7 +2749,7 @@ class DataGrid extends Widget {
   /**
    * Handle a full data model reset.
    */
-  private _onModelReset(args: DataModel.ModelResetArgs): void {
+  protected _onModelReset(args: DataModel.ModelResetArgs): void {
     // Look up the various current section counts.
     let nr = this._rowSections.count;
     let nc = this._columnSections.count;
@@ -2797,14 +2797,14 @@ class DataGrid extends Widget {
   /**
    * A signal handler for the renderer map `changed` signal.
    */
-  private _onRenderersChanged(): void {
+  protected _onRenderersChanged(): void {
     this._repaintContent();
   }
 
   /**
    * Handle the `'keydown'` event for the data grid.
    */
-  private _evtKeyDown(event: KeyboardEvent): void {
+  protected _evtKeyDown(event: KeyboardEvent): void {
     if (this._mousedown) {
       event.preventDefault();
       event.stopPropagation();
@@ -2816,7 +2816,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'mousedown'` event for the data grid.
    */
-  private _evtMouseDown(event: MouseEvent): void {
+  protected _evtMouseDown(event: MouseEvent): void {
     // Ignore everything except the left mouse button.
     if (event.button !== 0) {
       return;
@@ -2848,7 +2848,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'mousemove'` event for the data grid.
    */
-  private _evtMouseMove(event: MouseEvent): void {
+  protected _evtMouseMove(event: MouseEvent): void {
     // Stop the event propagation if the mouse is down.
     if (this._mousedown) {
       event.preventDefault();
@@ -2871,7 +2871,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'mouseup'` event for the data grid.
    */
-  private _evtMouseUp(event: MouseEvent): void {
+  protected _evtMouseUp(event: MouseEvent): void {
     // Ignore everything except the left mouse button.
     if (event.button !== 0) {
       return;
@@ -2893,7 +2893,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'dblclick'` event for the data grid.
    */
-  private _evtMouseDoubleClick(event: MouseEvent): void {
+  protected _evtMouseDoubleClick(event: MouseEvent): void {
     // Ignore everything except the left mouse button.
     if (event.button !== 0) {
       return;
@@ -2915,7 +2915,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'mouseleave'` event for the data grid.
    */
-  private _evtMouseLeave(event: MouseEvent): void {
+  protected _evtMouseLeave(event: MouseEvent): void {
     if (this._mousedown) {
       event.preventDefault();
       event.stopPropagation();
@@ -2927,7 +2927,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'contextmenu'` event for the data grid.
    */
-  private _evtContextMenu(event: MouseEvent): void {
+  protected _evtContextMenu(event: MouseEvent): void {
     if (this._mousedown) {
       event.preventDefault();
       event.stopPropagation();
@@ -2939,7 +2939,7 @@ class DataGrid extends Widget {
   /**
    * Handle the `'wheel'` event for the data grid.
    */
-  private _evtWheel(event: WheelEvent): void {
+  protected _evtWheel(event: WheelEvent): void {
     // Ignore the event if `accel` is held.
     if (Platform.accelKey(event)) {
       return;
@@ -2961,7 +2961,7 @@ class DataGrid extends Widget {
   /**
    * Release the mouse grab.
    */
-  private _releaseMouse(): void {
+  protected _releaseMouse(): void {
     // Clear the mousedown flag.
     this._mousedown = false;
 
@@ -2981,7 +2981,7 @@ class DataGrid extends Widget {
   /**
    * Refresh the dpi ratio.
    */
-  private _refreshDPI(): void {
+  protected _refreshDPI(): void {
     // Get the best integral value for the dpi ratio.
     let dpiRatio = Math.ceil(window.devicePixelRatio);
 
@@ -3014,7 +3014,7 @@ class DataGrid extends Widget {
   /**
    * Resize a row section immediately.
    */
-  private _resizeRow(index: number, size: number): void {
+  protected _resizeRow(index: number, size: number): void {
     // Look up the target section list.
     let list = this._rowSections;
 
@@ -3126,7 +3126,7 @@ class DataGrid extends Widget {
   /**
    * Resize a column section immediately.
    */
-  private _resizeColumn(index: number, size: number): void {
+  protected _resizeColumn(index: number, size: number): void {
     // Look up the target section list.
     let list = this._columnSections;
 
@@ -3238,7 +3238,7 @@ class DataGrid extends Widget {
   /**
    * Resize a row header section immediately.
    */
-  private _resizeRowHeader(index: number, size: number): void {
+  protected _resizeRowHeader(index: number, size: number): void {
     // Look up the target section list.
     let list = this._rowHeaderSections;
 
@@ -3326,7 +3326,7 @@ class DataGrid extends Widget {
   /**
    * Resize a column header section immediately.
    */
-  private _resizeColumnHeader(index: number, size: number): void {
+  protected _resizeColumnHeader(index: number, size: number): void {
     // Look up the target section list.
     let list = this._columnHeaderSections;
 
@@ -3417,7 +3417,7 @@ class DataGrid extends Widget {
   /**
    * Scroll immediately to the specified offset position.
    */
-  private _scrollTo(x: number, y: number): void {
+  protected _scrollTo(x: number, y: number): void {
     // Floor and clamp the position to the allowable range.
     x = Math.max(0, Math.min(Math.floor(x), this.maxScrollX));
     y = Math.max(0, Math.min(Math.floor(y), this.maxScrollY));
@@ -3546,7 +3546,7 @@ class DataGrid extends Widget {
    *
    * This automatically accounts for the dpi ratio.
    */
-  private _blitContent(source: HTMLCanvasElement, x: number, y: number, w: number, h: number, dx: number, dy: number): void {
+  protected _blitContent(source: HTMLCanvasElement, x: number, y: number, w: number, h: number, dx: number, dy: number): void {
     // Scale the blit coordinates by the dpi ratio.
     x *= this._dpiRatio;
     y *= this._dpiRatio;
@@ -3577,7 +3577,7 @@ class DataGrid extends Widget {
    * methods should not be invoked directly. This method dispatches
    * to the drawing methods in the correct order.
    */
-  private _paintContent(rx: number, ry: number, rw: number, rh: number): void {
+  protected _paintContent(rx: number, ry: number, rw: number, rh: number): void {
     // Scale the canvas and buffer GC for the dpi ratio.
     this._canvasGC.setTransform(this._dpiRatio, 0, 0, this._dpiRatio, 0, 0);
     this._bufferGC.setTransform(this._dpiRatio, 0, 0, this._dpiRatio, 0, 0);
@@ -3608,7 +3608,7 @@ class DataGrid extends Widget {
    * `_draw*` methods should not be invoked directly. This method
    * dispatches to the drawing methods in the correct order.
    */
-  private _paintOverlay(): void {
+  protected _paintOverlay(): void {
     // Scale the overlay GC for the dpi ratio.
     this._overlayGC.setTransform(this._dpiRatio, 0, 0, this._dpiRatio, 0, 0);
 
@@ -3634,7 +3634,7 @@ class DataGrid extends Widget {
   /**
    * Draw the void region for the dirty rect.
    */
-  private _drawVoidRegion(rx: number, ry: number, rw: number, rh: number): void {
+  protected _drawVoidRegion(rx: number, ry: number, rw: number, rh: number): void {
     // Look up the void color.
     let color = this._style.voidColor;
 
@@ -3651,7 +3651,7 @@ class DataGrid extends Widget {
   /**
    * Draw the body region which intersects the dirty rect.
    */
-  private _drawBodyRegion(rx: number, ry: number, rw: number, rh: number): void {
+  protected _drawBodyRegion(rx: number, ry: number, rw: number, rh: number): void {
     // Get the visible content dimensions.
     let contentW = this._columnSections.length - this._scrollX;
     let contentH = this._rowSections.length - this._scrollY;
@@ -3789,7 +3789,7 @@ class DataGrid extends Widget {
   /**
    * Draw the row header region which intersects the dirty rect.
    */
-  private _drawRowHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
+  protected _drawRowHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
     // Get the visible content dimensions.
     let contentW = this.headerWidth;
     let contentH = this.bodyHeight - this._scrollY;
@@ -3911,7 +3911,7 @@ class DataGrid extends Widget {
   /**
    * Draw the column header region which intersects the dirty rect.
    */
-  private _drawColumnHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
+  protected _drawColumnHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
     // Get the visible content dimensions.
     let contentW = this.bodyWidth - this._scrollX;
     let contentH = this.headerHeight;
@@ -4033,7 +4033,7 @@ class DataGrid extends Widget {
   /**
    * Draw the corner header region which intersects the dirty rect.
    */
-  private _drawCornerHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
+  protected _drawCornerHeaderRegion(rx: number, ry: number, rw: number, rh: number): void {
     // Get the visible content dimensions.
     let contentW = this.headerWidth;
     let contentH = this.headerHeight;
@@ -4139,7 +4139,7 @@ class DataGrid extends Widget {
   /**
    * Draw the background for the given paint region.
    */
-  private _drawBackground(rgn: Private.PaintRegion, color: string | undefined): void {
+  protected _drawBackground(rgn: Private.PaintRegion, color: string | undefined): void {
     // Bail if there is no color to draw.
     if (!color) {
       return;
@@ -4156,7 +4156,7 @@ class DataGrid extends Widget {
   /**
    * Draw the row background for the given paint region.
    */
-  private _drawRowBackground(rgn: Private.PaintRegion, colorFn: ((i: number) => string) | undefined): void {
+  protected _drawRowBackground(rgn: Private.PaintRegion, colorFn: ((i: number) => string) | undefined): void {
     // Bail if there is no color function.
     if (!colorFn) {
       return;
@@ -4195,7 +4195,7 @@ class DataGrid extends Widget {
   /**
    * Draw the column background for the given paint region.
    */
-  private _drawColumnBackground(rgn: Private.PaintRegion, colorFn: ((i: number) => string) | undefined): void {
+  protected _drawColumnBackground(rgn: Private.PaintRegion, colorFn: ((i: number) => string) | undefined): void {
     // Bail if there is no color function.
     if (!colorFn) {
       return;
@@ -4234,7 +4234,7 @@ class DataGrid extends Widget {
   /**
    * Draw the cells for the given paint region.
    */
-  private _drawCells(rgn: Private.PaintRegion): void {
+  protected _drawCells(rgn: Private.PaintRegion): void {
     // Bail if there is no data model.
     if (!this._dataModel) {
       return;
@@ -4368,7 +4368,7 @@ class DataGrid extends Widget {
   /**
    * Draw the horizontal grid lines for the given paint region.
    */
-  private _drawHorizontalGridLines(rgn: Private.PaintRegion, color: string | undefined): void {
+  protected _drawHorizontalGridLines(rgn: Private.PaintRegion, color: string | undefined): void {
     // Bail if there is no color to draw.
     if (!color) {
       return;
@@ -4429,7 +4429,7 @@ class DataGrid extends Widget {
   /**
    * Draw the vertical grid lines for the given paint region.
    */
-  private _drawVerticalGridLines(rgn: Private.PaintRegion, color: string | undefined): void {
+  protected _drawVerticalGridLines(rgn: Private.PaintRegion, color: string | undefined): void {
     // Bail if there is no color to draw.
     if (!color) {
       return;
@@ -4490,7 +4490,7 @@ class DataGrid extends Widget {
   /**
    * Draw the body selections for the data grid.
    */
-  private _drawBodySelections(): void {
+  protected _drawBodySelections(): void {
     // Fetch the selection model.
     let model = this._selectionModel;
 
@@ -4643,7 +4643,7 @@ class DataGrid extends Widget {
   /**
    * Draw the row header selections for the data grid.
    */
-  private _drawRowHeaderSelections(): void {
+  protected _drawRowHeaderSelections(): void {
     // Fetch the selection model.
     let model = this._selectionModel;
 
@@ -4744,7 +4744,7 @@ class DataGrid extends Widget {
   /**
    * Draw the column header selections for the data grid.
    */
-  private _drawColumnHeaderSelections(): void {
+  protected _drawColumnHeaderSelections(): void {
     // Fetch the selection model.
     let model = this._selectionModel;
 
@@ -4845,7 +4845,7 @@ class DataGrid extends Widget {
   /**
    * Draw the overlay cursor for the data grid.
    */
-  private _drawCursor(): void {
+  protected _drawCursor(): void {
     // Fetch the selection model.
     let model = this._selectionModel;
 
@@ -4957,7 +4957,7 @@ class DataGrid extends Widget {
   /**
    * Draw the overlay shadows for the data grid.
    */
-  private _drawShadows(): void {
+  protected _drawShadows(): void {
     // Fetch the scroll shadow from the style.
     let shadow = this._style.scrollShadow;
 
@@ -5116,48 +5116,48 @@ class DataGrid extends Widget {
     gc.restore();
   }
 
-  private _viewport: Widget;
-  private _vScrollBar: ScrollBar;
-  private _hScrollBar: ScrollBar;
-  private _scrollCorner: Widget;
+  protected _viewport: Widget;
+  protected _vScrollBar: ScrollBar;
+  protected _hScrollBar: ScrollBar;
+  protected _scrollCorner: Widget;
 
-  private _scrollX = 0;
-  private _scrollY = 0;
-  private _viewportWidth = 0;
-  private _viewportHeight = 0;
+  protected _scrollX = 0;
+  protected _scrollY = 0;
+  protected _viewportWidth = 0;
+  protected _viewportHeight = 0;
 
-  private _mousedown = false;
-  private _keyHandler: DataGrid.IKeyHandler | null = null;
-  private _mouseHandler: DataGrid.IMouseHandler | null = null;
+  protected _mousedown = false;
+  protected _keyHandler: DataGrid.IKeyHandler | null = null;
+  protected _mouseHandler: DataGrid.IMouseHandler | null = null;
 
-  private _vScrollBarMinWidth = 0;
-  private _hScrollBarMinHeight = 0;
-  private _dpiRatio = Math.ceil(window.devicePixelRatio);
+  protected _vScrollBarMinWidth = 0;
+  protected _hScrollBarMinHeight = 0;
+  protected _dpiRatio = Math.ceil(window.devicePixelRatio);
 
-  private _canvas: HTMLCanvasElement;
-  private _buffer: HTMLCanvasElement;
-  private _overlay: HTMLCanvasElement;
-  private _canvasGC: CanvasRenderingContext2D;
-  private _bufferGC: CanvasRenderingContext2D;
-  private _overlayGC: CanvasRenderingContext2D;
+  protected _canvas: HTMLCanvasElement;
+  protected _buffer: HTMLCanvasElement;
+  protected _overlay: HTMLCanvasElement;
+  protected _canvasGC: CanvasRenderingContext2D;
+  protected _bufferGC: CanvasRenderingContext2D;
+  protected _overlayGC: CanvasRenderingContext2D;
 
-  private _rowSections: SectionList;
-  private _columnSections: SectionList;
-  private _rowHeaderSections: SectionList;
-  private _columnHeaderSections: SectionList;
+  protected _rowSections: SectionList;
+  protected _columnSections: SectionList;
+  protected _rowHeaderSections: SectionList;
+  protected _columnHeaderSections: SectionList;
 
-  private _dataModel: DataModel | null = null;
-  private _selectionModel: SelectionModel | null = null;
+  protected _dataModel: DataModel | null = null;
+  protected _selectionModel: SelectionModel | null = null;
 
-  private _stretchLastRow: boolean;
-  private _stretchLastColumn: boolean;
+  protected _stretchLastRow: boolean;
+  protected _stretchLastColumn: boolean;
 
-  private _style: DataGrid.Style;
-  private _cellRenderers: RendererMap;
-  private _copyConfig: DataGrid.CopyConfig;
-  private _headerVisibility: DataGrid.HeaderVisibility;
-  private _editorController: ICellEditorController | null;
-  private _editingEnabled: boolean = false;
+  protected _style: DataGrid.Style;
+  protected _cellRenderers: RendererMap;
+  protected _copyConfig: DataGrid.CopyConfig;
+  protected _headerVisibility: DataGrid.HeaderVisibility;
+  protected _editorController: ICellEditorController | null;
+  protected _editingEnabled: boolean = false;
 }
 
 
@@ -5914,11 +5914,11 @@ namespace Private {
       return true;
     }
 
-    private _region: DataModel.CellRegion | 'all';
-    private _r1: number;
-    private _c1: number;
-    private _r2: number;
-    private _c2: number;
+    protected _region: DataModel.CellRegion | 'all';
+    protected _r1: number;
+    protected _c1: number;
+    protected _r2: number;
+    protected _c2: number;
   }
 
   /**
@@ -5974,9 +5974,9 @@ namespace Private {
       return true;
     }
 
-    private _region: DataModel.RowRegion;
-    private _index: number;
-    private _size: number;
+    protected _region: DataModel.RowRegion;
+    protected _index: number;
+    protected _size: number;
   }
 
   /**
@@ -6032,8 +6032,8 @@ namespace Private {
       return true;
     }
 
-    private _region: DataModel.ColumnRegion;
-    private _index: number;
-    private _size: number;
+    protected _region: DataModel.ColumnRegion;
+    protected _index: number;
+    protected _size: number;
   }
 }
