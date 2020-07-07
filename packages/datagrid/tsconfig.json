@@ -21,31 +21,32 @@
   },
   "include": [
     "src/*"
-  ],
-  "references": [
-    {
-      "path": "../algorithm"
-    },
-    {
-      "path": "../coreutils"
-    },
-    {
-      "path": "../disposable"
-    },
-    {
-      "path": "../domutils"
-    },
-    {
-      "path": "../dragdrop"
-    },
-    {
-      "path": "../messaging"
-    },
-    {
-      "path": "../signaling"
-    },
-    {
-      "path": "../widgets"
-    }
   ]
+//   "references": [
+//     {
+//       "path": "../algorithm"
+//     },
+//     {
+//       "path": "../coreutils"
+//     },
+//     {
+//       "path": "../disposable"
+//     },
+//     {
+//       "path": "../domutils"
+//     },
+//     {
+//       "path": "../dragdrop"
+//     },
+//     {
+//       "path": "../messaging"
+//     },
+//     {
+//       "path": "../signaling"
+//     },
+//     {
+//       "path": "../widgets"
+//     }
+//   ]
+// }
 }

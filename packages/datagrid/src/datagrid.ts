@@ -2818,10 +2818,6 @@ class DataGrid extends Widget {
    */
   protected _evtMouseDown(event: MouseEvent): void {
     // Ignore everything except the left mouse button.
-    if (event.button !== 0) {
-      return;
-    }
-
     // Activate the grid.
     this.activate();
 
