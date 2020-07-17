@@ -32,6 +32,7 @@
     "clean": "rimraf ./lib && rimraf *.tsbuildinfo && rimraf ./types && rimraf ./dist",
     "docs": "typedoc --options tdoptions.json src",
     "minimize": "terser dist/index.js -c -m --source-map \"content='dist/index.js.map',url='index.min.js.map'\" -o dist/index.min.js",
+    "prepare": "jlpm run build",
     "watch": "tsc --build --watch"
   },
   "dependencies": {
