@@ -1,6 +1,6 @@
 {
   "name": "tde-datagrid",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "description": "Lumino Tabular Data Grid for the Tabular Data Editor Extension",
   "homepage": "https://github.com/lmcnichols/lumino",
   "bugs": {
