@@ -71,18 +71,18 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
    */
   release(): void {
     // Bail early if the is no press data.
-    if (!this._pressData) {
+    if (!this.pressData) {
       return;
     }
 
     // Clear the autoselect timeout.
-    if (this._pressData.type === 'select') {
-      this._pressData.timeout = -1;
+    if (this.pressData.type === 'select') {
+      this.pressData.timeout = -1;
     }
 
     // Clear the press data.
-    this._pressData.override.dispose();
-    this._pressData = null;
+    this.pressData.override.dispose();
+    this.pressData = null;
   }
 
   /**
@@ -162,7 +162,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
       let override = Drag.overrideCursor('default');
 
       // Set up the press data.
-      this._pressData = {
+      this.pressData = {
         type: 'select', region, row, column, override,
         localX: -1, localY: -1, timeout: -1
       };
@@ -238,7 +238,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
       let override = Drag.overrideCursor(cursor);
 
       // Create the temporary press data.
-      this._pressData = { type, region: rgn, index, size, clientX, override };
+      this.pressData = { type, region: rgn, index, size, clientX, override };
 
       // Done.
       return;
@@ -264,7 +264,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
       let override = Drag.overrideCursor(cursor);
 
       // Create the temporary press data.
-      this._pressData = { type, region: rgn, index, size, clientY, override };
+      this.pressData = { type, region: rgn, index, size, clientY, override };
 
       // Done.
       return;
@@ -284,7 +284,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
     let override = Drag.overrideCursor('default');
 
     // Set up the press data.
-    this._pressData = {
+    this.pressData = {
       type: 'select', region, row, column, override,
       localX: -1, localY: -1, timeout: -1
     };
@@ -346,7 +346,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
    */
   onMouseMove(grid: DataGrid, event: MouseEvent): void {
     // Fetch the press data.
-    const data = this._pressData;
+    const data = this.pressData;
 
     // Bail early if there is no press data.
     if (!data) {
@@ -554,7 +554,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
    */
   onWheel(grid: DataGrid, event: WheelEvent): void {
     // Bail if a mouse press is in progress.
-    if (this._pressData) {
+    if (this.pressData) {
       return;
     }
 
@@ -591,144 +591,144 @@ cursorForHandle(handle: ResizeHandle): string {
 }
 
   private _disposed = false;
-  private _pressData: Private.PressData | null;
+  protected pressData: PressData | null;
 }
 
 /**
 * A type alias for the resize handle types.
 */
-  export
-  type ResizeHandle = 'top' | 'left' | 'right' | 'bottom' | 'none';
+export
+type ResizeHandle = 'top' | 'left' | 'right' | 'bottom' | 'none';
+
+/**
+ * A type alias for the row resize data.
+ */
+export
+type RowResizeData = {
+  /**
+   * The descriminated type for the data.
+   */
+  readonly type: 'row-resize';
+
+  /**
+   * The row region which holds the section being resized.
+   */
+  readonly region: DataModel.RowRegion;
+
+  /**
+   * The index of the section being resized.
+   */
+  readonly index: number;
+
+  /**
+   * The original size of the section.
+   */
+  readonly size: number;
+
+  /**
+   * The original client Y position of the mouse.
+   */
+  readonly clientY: number;
+
+  /**
+   * The disposable to clear the cursor override.
+   */
+  readonly override: IDisposable;
+};
+
+/**
+ * A type alias for the column resize data.
+ */
+export
+type ColumnResizeData = {
+  /**
+   * The descriminated type for the data.
+   */
+  readonly type: 'column-resize';
+
+  /**
+   * The column region which holds the section being resized.
+   */
+  readonly region: DataModel.ColumnRegion;
+
+  /**
+   * The index of the section being resized.
+   */
+  readonly index: number;
+
+  /**
+   * The original size of the section.
+   */
+  readonly size: number;
+
+  /**
+   * The original client X position of the mouse.
+   */
+  readonly clientX: number;
+
+  /**
+   * The disposable to clear the cursor override.
+   */
+  readonly override: IDisposable;
+};
+
+/**
+ * A type alias for the select data.
+ */
+export
+type SelectData = {
+  /**
+   * The descriminated type for the data.
+   */
+  readonly type: 'select';
+
+  /**
+   * The original region for the mouse press.
+   */
+  readonly region: DataModel.CellRegion;
+
+  /**
+   * The original row that was selected.
+   */
+  readonly row: number;
+
+  /**
+   * The original column that was selected.
+   */
+  readonly column: number;
+
+  /**
+   * The disposable to clear the cursor override.
+   */
+  readonly override: IDisposable;
+
+  /**
+   * The current local X position of the mouse.
+   */
+  localX: number;
+
+  /**
+   * The current local Y position of the mouse.
+   */
+  localY: number;
+
+  /**
+   * The timeout delay for the autoselect loop.
+   */
+  timeout: number;
+};
+
+/**
+ * A type alias for the resize handler press data.
+ */
+export
+type PressData = RowResizeData | ColumnResizeData | SelectData ;
 
 
 /**
  * The namespace for the module implementation details.
  */
 namespace Private {
-  /**
-   * A type alias for the row resize data.
-   */
-  export
-  type RowResizeData = {
-    /**
-     * The descriminated type for the data.
-     */
-    readonly type: 'row-resize';
-
-    /**
-     * The row region which holds the section being resized.
-     */
-    readonly region: DataModel.RowRegion;
-
-    /**
-     * The index of the section being resized.
-     */
-    readonly index: number;
-
-    /**
-     * The original size of the section.
-     */
-    readonly size: number;
-
-    /**
-     * The original client Y position of the mouse.
-     */
-    readonly clientY: number;
-
-    /**
-     * The disposable to clear the cursor override.
-     */
-    readonly override: IDisposable;
-  };
-
-  /**
-   * A type alias for the column resize data.
-   */
-  export
-  type ColumnResizeData = {
-    /**
-     * The descriminated type for the data.
-     */
-    readonly type: 'column-resize';
-
-    /**
-     * The column region which holds the section being resized.
-     */
-    readonly region: DataModel.ColumnRegion;
-
-    /**
-     * The index of the section being resized.
-     */
-    readonly index: number;
-
-    /**
-     * The original size of the section.
-     */
-    readonly size: number;
-
-    /**
-     * The original client X position of the mouse.
-     */
-    readonly clientX: number;
-
-    /**
-     * The disposable to clear the cursor override.
-     */
-    readonly override: IDisposable;
-  };
-
-  /**
-   * A type alias for the select data.
-   */
-  export
-  type SelectData = {
-    /**
-     * The descriminated type for the data.
-     */
-    readonly type: 'select';
-
-    /**
-     * The original region for the mouse press.
-     */
-    readonly region: DataModel.CellRegion;
-
-    /**
-     * The original row that was selected.
-     */
-    readonly row: number;
-
-    /**
-     * The original column that was selected.
-     */
-    readonly column: number;
-
-    /**
-     * The disposable to clear the cursor override.
-     */
-    readonly override: IDisposable;
-
-    /**
-     * The current local X position of the mouse.
-     */
-    localX: number;
-
-    /**
-     * The current local Y position of the mouse.
-     */
-    localY: number;
-
-    /**
-     * The timeout delay for the autoselect loop.
-     */
-    timeout: number;
-  };
-
-  /**
-   * A type alias for the resize handler press data.
-   */
-  export
-  type PressData = RowResizeData | ColumnResizeData | SelectData ;
-
   /**
    * Get the resize handle for a grid hit test.
    */
