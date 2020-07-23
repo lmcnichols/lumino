@@ -1,10 +1,10 @@
 {
-  "name": "@lumino/dragdrop",
-  "version": "1.6.3",
-  "description": "Lumino Drag and Drop",
-  "homepage": "https://github.com/jupyterlab/lumino",
+  "name": "tde-dragdrop",
+  "version": "0.0.1",
+  "description": "Lumino Drag and Drop (A slightly modified version for the Tabular Data Editor)",
+  "homepage": "https://github.com/lmcnichols/lumino",
   "bugs": {
-    "url": "https://github.com/jupyterlab/lumino/issues"
+    "url": "https://github.com/lmcnichols/lumino/issues"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,8 @@
     "A. Darian <git@darian.af>",
     "Dave Willmer <dave.willmer@gmail.com>",
     "S. Chris Colbert <sccolbert@gmail.com>",
-    "Steven Silvester <steven.silvester@gmail.com>"
+    "Steven Silvester <steven.silvester@gmail.com>",
+    "Logan McNichols <loganamcnichols@gmail.com>"
   ],
   "files": [
     "dist/*",
@@ -35,6 +36,7 @@
     "build:test": "tsc --build tests && cd tests && webpack",
     "clean": "rimraf ./lib && rimraf *.tsbuildinfo && rimraf ./types && rimraf ./dist",
     "clean:test": "rimraf tests/build",
+    "prepare": "jlpm run build",
     "docs": "typedoc --options tdoptions.json src",
     "minimize": "terser dist/index.js -c -m --source-map \"content='dist/index.js.map',url='index.min.js.map'\" -o dist/index.min.js",
     "test": "npm run test:firefox",
