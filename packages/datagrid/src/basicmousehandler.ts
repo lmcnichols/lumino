@@ -47,7 +47,7 @@ class BasicMouseHandler implements DataGrid.IMouseHandler {
    * get the press data for the most recent event.
    */
   get pressData(): Private.PressData | null {
-    return this._pressData
+    return this._pressData;
   }
 
   /**
