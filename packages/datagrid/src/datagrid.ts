@@ -729,6 +729,20 @@ class DataGrid extends Widget {
   }
 
   /**
+   * The vertical scroll bar for the data grid.
+   */
+  get vScrollBar(): ScrollBar {
+    return this._vScrollBar;
+  }
+
+  /**
+   * The horizontal scroll bar for the data grid.
+   */
+  get hScrollBar(): ScrollBar {
+    return this._hScrollBar;
+  }
+
+  /**
    * Scroll the grid to the specified row.
    *
    * @param row - The row index of the cell.
