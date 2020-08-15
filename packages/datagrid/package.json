@@ -1,17 +1,17 @@
 {
-  "name": "@lumino/datagrid",
-  "version": "0.12.0",
-  "description": "Lumino Tabular Data Grid",
-  "homepage": "https://github.com/jupyterlab/lumino",
+  "name": "tde-datagrid",
+  "version": "1.0.9",
+  "description": "Lumino Tabular Data Grid modified for the Tabular Data Editor Extension",
+  "homepage": "https://github.com/lmcnichols/lumino",
   "bugs": {
-    "url": "https://github.com/jupyterlab/lumino/issues"
+    "url": "https://github.com/lmcnichols/lumino/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupyterlab/lumino.git"
+    "url": "https://github.com/lmcnichols/lumino.git"
   },
   "license": "BSD-3-Clause",
-  "author": "S. Chris Colbert <sccolbert@gmail.com>",
+  "author": "Logan McNichols <loganamcnichols@gmail.com>",
   "contributors": [
     "A. Darian <git@darian.af>",
     "S. Chris Colbert <sccolbert@gmail.com>",
@@ -32,6 +32,7 @@
     "clean": "rimraf ./lib && rimraf *.tsbuildinfo && rimraf ./types && rimraf ./dist",
     "docs": "typedoc --options tdoptions.json src",
     "minimize": "terser dist/index.js -c -m --source-map \"content='dist/index.js.map',url='index.min.js.map'\" -o dist/index.min.js",
+    "prepare": "jlpm run build",
     "watch": "tsc --build --watch"
   },
   "dependencies": {
